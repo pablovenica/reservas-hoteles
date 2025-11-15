@@ -4,11 +4,10 @@ import "./Registro.css";
 
 export function Registro() {
   const [formData, setFormData] = useState({
-    usuario: "",
     nombre: "",
-    apellido: "",
     email: "",
     password: "",
+    tipo_usuario: "normal",
   });
 
   const handleChange = (e) => {
@@ -18,11 +17,31 @@ export function Registro() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔹 Más adelante acá iría la llamada al endpoint POST /usuarios
-    console.log("Registro:", formData);
+    try {
+      const res = await fetch("http://localhost:8080/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Error registrando usuario");
+        return;
+      }
+
+      alert("Usuario registrado con éxito");
+      window.location.href = "/login";
+    } catch (error) {
+      console.error(error);
+      alert("Error en el servidor");
+    }
   };
 
   return (
@@ -30,19 +49,7 @@ export function Registro() {
       <div className="registro-container">
         <h2 className="registro-title">Crear cuenta</h2>
         <form className="registro-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="usuario">Usuario</label>
-            <input
-              type="text"
-              id="usuario"
-              name="usuario"
-              placeholder="Nombre de usuario"
-              value={formData.usuario}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
+          
           <div className="form-group">
             <label htmlFor="nombre">Nombre</label>
             <input
@@ -51,19 +58,6 @@ export function Registro() {
               name="nombre"
               placeholder="Tu nombre"
               value={formData.nombre}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="apellido">Apellido</label>
-            <input
-              type="text"
-              id="apellido"
-              name="apellido"
-              placeholder="Tu apellido"
-              value={formData.apellido}
               onChange={handleChange}
               required
             />
