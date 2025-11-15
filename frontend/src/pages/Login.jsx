@@ -6,11 +6,43 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔹 Más adelante acá iría la llamada al endpoint de login
-    console.log("Login:", { email, password });
+    try {
+      const res = await fetch("http://localhost:8080/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Credenciales incorrectas");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("rol", data.rol);
+      localStorage.setItem("userID", data.userID);
+
+      alert("Login exitoso");
+
+      if (data.rol === "admin") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/usuario";
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error en el servidor");
+    }
   };
 
   return (
