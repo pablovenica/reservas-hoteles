@@ -1,0 +1,74 @@
+services:
+
+  mysql_service:
+    image: mysql:8.0
+    container_name: mysql_service
+    environment:
+      MYSQL_ROOT_PASSWORD: kaneki15..
+      MYSQL_DATABASE: hoteles
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pkaneki15.."]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mongo_hoteles:
+    image: mongo:7.0
+    container_name: mongo_hoteles
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend-net
+
+  mongo_express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo_hoteles
+    networks:
+      - backend-net
+
+  user_api:
+    build:
+      context: ./user_api
+    container_name: user_api
+    restart: always
+    depends_on:
+      - mysql_service
+    environment:
+      JWT_SECRET: super_clave_ultra_secreta
+      DB_USER: root
+      DB_PASSWORD: kaneki15..
+      DB_HOST: mysql_service
+      DB_PORT: "3306"
+      DB_NAME: hoteles
+    ports:
+      - "8080:8080"
+    networks:
+      - backend-net   # <-- cambiamos mynet por backend-net
+
+  booking_api:
+    build: ./booking_api
+    container_name: booking_api
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongo_hoteles
+    environment:
+      JWT_SECRET: super_clave_ultra_secreta
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+
+volumes:
+  mongo_data:
+  mysql_data:
