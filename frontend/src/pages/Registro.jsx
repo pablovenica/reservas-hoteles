@@ -1,130 +1,124 @@
-import React, { useEffect, useState } from "react";
-import { NavbarUsuario } from "../components/NavbarUsuario";
-import { CursoCard } from "../components/CursoCard";
-import "./Reservas.css";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "./Registro.css";
 
-export function Reservas() {
-  const [hoteles, setHoteles] = useState([]); // todos los hoteles del backend
-  const [filteredHoteles, setFilteredHoteles] = useState([]); // hoteles filtrados
+export function Registro() {
+  const [formData, setFormData] = useState({
+    nombre: "",
+    email: "",
+    password: "",
+    tipo_usuario: "normal",
+  });
 
-  const [ubicacion, setUbicacion] = useState("");
-  const [fechaEntrada, setFechaEntrada] = useState("");
-  const [fechaSalida, setFechaSalida] = useState("");
+  const navigate = useNavigate();
 
-  // Cargar hoteles desde booking-api al montar
-  useEffect(() => {
-    const fetchHoteles = async () => {
-      try {
-        const res = await fetch("http://localhost:8082/hotels");
-        const data = await res.json();
-        console.log("Hoteles desde backend:", data);
-        setHoteles(data);
-        setFilteredHoteles(data); // por defecto, mostrar todos
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    };
-
-    fetchHoteles();
-  }, []);
-
-  const handleBuscar = (e) => {
-    e.preventDefault();
-
-    // Validaciones: todos los campos obligatorios
-    if (!ubicacion || !fechaEntrada || !fechaSalida) {
-      alert("Debés completar ubicación, fecha de entrada y fecha de salida.");
-      return;
-    }
-
-    const entradaDate = new Date(fechaEntrada);
-    const salidaDate = new Date(fechaSalida);
-
-    if (salidaDate <= entradaDate) {
-      alert("La fecha de salida debe ser posterior a la fecha de entrada.");
-      return;
-    }
-
-    // Por ahora filtramos en frontend por título (luego será search-api)
-    const filtrados = hoteles.filter((hotel) =>
-      hotel.titulo?.toLowerCase().includes(ubicacion.toLowerCase())
-    );
-
-    setFilteredHoteles(filtrados);
-
-    console.log("Payload preparado para search-api:", {
-      ubicacion,
-      fechaEntrada,
-      fechaSalida,
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:8080/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "Error al registrarse",
+          text: data.error || "No se pudo crear el usuario. Intentá nuevamente.",
+          confirmButtonColor: "#00bcd4",
+        });
+        return;
+      }
+
+      await Swal.fire({
+        icon: "success",
+        title: "Usuario registrado",
+        text: "Tu cuenta fue creada correctamente. Ahora podés iniciar sesión.",
+        confirmButtonColor: "#00bcd4",
+      });
+
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error en el servidor",
+        text: "Ocurrió un problema al registrar tu usuario. Intentá más tarde.",
+        confirmButtonColor: "#00bcd4",
+      });
+    }
+  };
+
   return (
-    <>
-      <NavbarUsuario />
-
-      <section className="reservas-section">
-        <div className="reservas-container">
-          {/* Barra de búsqueda */}
-          <form className="filtros-reservas" onSubmit={handleBuscar}>
-            <div className="campo-filtro ubicacion">
-              <label className="campo-label">Ubicación</label>
-              <input
-                type="text"
-                className="campo-input"
-                placeholder="¿Dónde querés hospedarte?"
-                value={ubicacion}
-                onChange={(e) => setUbicacion(e.target.value)}
-              />
-            </div>
-
-            <div className="campo-filtro entrada">
-              <label className="campo-label">Entrada</label>
-              <input
-                type="date"
-                className="campo-input"
-                value={fechaEntrada}
-                onChange={(e) => setFechaEntrada(e.target.value)}
-              />
-            </div>
-
-            <div className="campo-filtro salida">
-              <label className="campo-label">Salida</label>
-              <input
-                type="date"
-                className="campo-input"
-                value={fechaSalida}
-                onChange={(e) => setFechaSalida(e.target.value)}
-              />
-            </div>
-
-            <button type="submit" className="btn-buscar">
-              Buscar
-            </button>
-          </form>
-
-          <h2 className="titulo-principal">Nuestras Habitaciones</h2>
-
-          <div className="cards-container">
-            {filteredHoteles.length === 0 ? (
-              <p className="mensaje-sin-resultados">
-                No se encontraron habitaciones para la búsqueda realizada.
-              </p>
-            ) : (
-              filteredHoteles.map((habitacion) => (
-                <CursoCard
-                  key={habitacion.id}
-                  titulo={habitacion.titulo}
-                  nivel={`Nivel: ${habitacion.nivel}`}
-                  duracion={habitacion.duracion}
-                  docente="Hotel"
-                  precio={habitacion.precio}
-                />
-              ))
-            )}
+    <section className="registro-section">
+      <div className="registro-container">
+        <h2 className="registro-title">Crear cuenta</h2>
+        <form className="registro-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="nombre">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Tu nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              required
+            />
           </div>
-        </div>
-      </section>
-    </>
+
+          <div className="form-group">
+            <label htmlFor="email">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="tucorreo@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="********"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-registro">
+            Registrarse
+          </button>
+        </form>
+
+        <p className="login-text">
+          ¿Ya tenés cuenta?{" "}
+          <Link to="/login" className="login-link">
+            Iniciá sesión
+          </Link>
+        </p>
+      </div>
+    </section>
   );
 }
