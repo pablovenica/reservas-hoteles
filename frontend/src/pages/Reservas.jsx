@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import { NavbarUsuario } from "../components/NavbarUsuario";
 import { CursoCard } from "../components/CursoCard";
 import "./Reservas.css";
 
 export function Reservas() {
-  const [hoteles, setHoteles] = useState([]);            // todos los hoteles del backend
-  const [filteredHoteles, setFilteredHoteles] = useState([]); // hoteles filtrados para mostrar
+  const [hoteles, setHoteles] = useState([]); // todos los hoteles del backend
+  const [filteredHoteles, setFilteredHoteles] = useState([]); // hoteles filtrados
 
   const [ubicacion, setUbicacion] = useState("");
   const [fechaEntrada, setFechaEntrada] = useState("");
@@ -22,6 +23,12 @@ export function Reservas() {
         setFilteredHoteles(data); // por defecto, mostrar todos
       } catch (error) {
         console.log("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error al cargar habitaciones",
+          text: "No pudimos obtener la lista de habitaciones. Intentalo nuevamente.",
+          confirmButtonColor: "#00bcd4",
+        });
       }
     };
 
@@ -31,9 +38,14 @@ export function Reservas() {
   const handleBuscar = (e) => {
     e.preventDefault();
 
-    // Validaciones
+    // Validaciones: todos los campos obligatorios
     if (!ubicacion || !fechaEntrada || !fechaSalida) {
-      alert("Debés completar ubicación, fecha de entrada y fecha de salida.");
+      Swal.fire({
+        icon: "warning",
+        title: "Datos incompletos",
+        text: "Debés completar ubicación, fecha de entrada y fecha de salida.",
+        confirmButtonColor: "#00bcd4",
+      });
       return;
     }
 
@@ -41,17 +53,38 @@ export function Reservas() {
     const salidaDate = new Date(fechaSalida);
 
     if (salidaDate <= entradaDate) {
-      alert("La fecha de salida debe ser posterior a la fecha de entrada.");
+      Swal.fire({
+        icon: "error",
+        title: "Rango de fechas inválido",
+        text: "La fecha de salida debe ser posterior a la fecha de entrada.",
+        confirmButtonColor: "#00bcd4",
+      });
       return;
     }
 
-    // más adelante vamos a llamar al search-api.
-    // Por ahora hacemos un filtro simple por título para que veas el comportamiento.
+    // Por ahora filtramos en frontend por título (luego será search-api)
     const filtrados = hoteles.filter((hotel) =>
       hotel.titulo?.toLowerCase().includes(ubicacion.toLowerCase())
     );
 
     setFilteredHoteles(filtrados);
+
+    if (filtrados.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "Sin resultados",
+        text: "No se encontraron habitaciones para la búsqueda realizada.",
+        confirmButtonColor: "#00bcd4",
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Búsqueda actualizada",
+        text: "Te mostramos las habitaciones disponibles según tu búsqueda.",
+        timer: 1800,
+        showConfirmButton: false,
+      });
+    }
 
     console.log("Payload preparado para search-api:", {
       ubicacion,
@@ -63,12 +96,12 @@ export function Reservas() {
   return (
     <>
       <NavbarUsuario />
+
       <section className="reservas-section">
         <div className="reservas-container">
-
-          {/* 🔹 Barra de búsqueda (ubicación + fechas) */}
+          {/* Barra de búsqueda */}
           <form className="filtros-reservas" onSubmit={handleBuscar}>
-            <div className="campo-filtro">
+            <div className="campo-filtro ubicacion">
               <label className="campo-label">Ubicación</label>
               <input
                 type="text"
@@ -79,7 +112,7 @@ export function Reservas() {
               />
             </div>
 
-            <div className="campo-filtro">
+            <div className="campo-filtro entrada">
               <label className="campo-label">Entrada</label>
               <input
                 type="date"
@@ -89,7 +122,7 @@ export function Reservas() {
               />
             </div>
 
-            <div className="campo-filtro">
+            <div className="campo-filtro salida">
               <label className="campo-label">Salida</label>
               <input
                 type="date"
