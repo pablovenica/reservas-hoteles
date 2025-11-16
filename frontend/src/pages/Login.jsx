@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,16 +29,22 @@ export function Login() {
         return;
       }
 
+      // 🔹 Guardamos token y datos mínimos del usuario
       localStorage.setItem("token", data.token);
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("userID", data.userID);
 
+      // 🔹 Nombre a mostrar en el navbar (antes del @ del email)
+      const nombreParaMostrar = email.split("@")[0];
+      localStorage.setItem("userName", nombreParaMostrar);
+
       alert("Login exitoso");
 
+      // 🔹 Redirigimos según rol (si querés podés dejar todo a /usuario)
       if (data.rol === "admin") {
-        window.location.href = "/admin";
+        navigate("/admin");
       } else {
-        window.location.href = "/usuario";
+        navigate("/usuario");
       }
     } catch (error) {
       console.error("Error:", error);
