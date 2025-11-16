@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import "./Login.css";
 
 export function Login() {
@@ -25,22 +26,33 @@ export function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Credenciales incorrectas");
+        Swal.fire({
+          icon: "error",
+          title: "Credenciales incorrectas",
+          text: data.error || "Revisá tu correo y contraseña.",
+          confirmButtonColor: "#00bcd4",
+        });
         return;
       }
 
-      // 🔹 Guardamos token y datos mínimos del usuario
+      // Guardamos token y datos en localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("userID", data.userID);
 
-      // 🔹 Nombre a mostrar en el navbar (antes del @ del email)
+      // Nombre a mostrar en el navbar (parte antes del @)
       const nombreParaMostrar = email.split("@")[0];
       localStorage.setItem("userName", nombreParaMostrar);
 
-      alert("Login exitoso");
+      await Swal.fire({
+        icon: "success",
+        title: "Login exitoso",
+        text: "Bienvenido a VEYOR Hotels.",
+        timer: 1600,
+        showConfirmButton: false,
+      });
 
-      // 🔹 Redirigimos según rol (si querés podés dejar todo a /usuario)
+      // Redirigimos según rol
       if (data.rol === "admin") {
         navigate("/admin");
       } else {
@@ -48,7 +60,12 @@ export function Login() {
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error en el servidor");
+      Swal.fire({
+        icon: "error",
+        title: "Error en el servidor",
+        text: "Ocurrió un problema al intentar iniciar sesión. Probá más tarde.",
+        confirmButtonColor: "#00bcd4",
+      });
     }
   };
 
