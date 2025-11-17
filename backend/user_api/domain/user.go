@@ -5,7 +5,7 @@ type User struct {
 	Nombre      string `gorm:"type:varchar(45);not null"`
 	Email       string `gorm:"type:varchar(45);unique;not null"`
 	Password    string `gorm:"column:password"`
-	TipoUsuario string `gorm:"column:tipo_usuarios_id"`
+	TipoUsuario string `gorm:"column:tipo_usuarios"`
 }
 
 type Users []User

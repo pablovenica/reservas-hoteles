@@ -10,11 +10,6 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - backend-net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pkaneki15.."]
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
   mongo_hoteles:
     image: mongo:7.0
@@ -42,27 +37,23 @@ services:
     restart: always
     depends_on:
       - mysql_service
-    environment:
-      JWT_SECRET: super_clave_ultra_secreta
-      DB_USER: root
-      DB_PASSWORD: kaneki15..
-      DB_HOST: mysql_service
-      DB_PORT: "3306"
-      DB_NAME: hoteles
+    env_file:
+      - ./user_api/.env
     ports:
       - "8080:8080"
     networks:
-      - backend-net   # <-- cambiamos mynet por backend-net
+      - backend-net
 
-  booking_api:
-    build: ./booking_api
-    container_name: booking_api
-    ports:
-      - "8082:8082"
+  hotels_api:
+    build:
+      context: ./hotels_api
+    container_name: hotels_api
+    env_file:
+      - ./hotels_api/.env
     depends_on:
       - mongo_hoteles
-    environment:
-      JWT_SECRET: super_clave_ultra_secreta
+    ports:
+      - "8082:8082"
     networks:
       - backend-net
 
