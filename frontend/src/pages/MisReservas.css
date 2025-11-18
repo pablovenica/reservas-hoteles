@@ -1,0 +1,92 @@
+/* ===============================
+   TEMA OSCURO — MIS RESERVAS
+   =============================== */
+
+:root {
+  --bg-page: #0d0d0f;        /* Fondo general oscuro */
+  --bg-card: #1a1c20;        /* Card oscuro */
+  --bg-card-hover: #1f2126;
+  --text-main: #ffffff;      /* Texto blanco */
+  --text-muted: #c8c8c8;     /* Gris claro */
+  --accent: #2563eb;         /* Azul elegante */
+  --accent-hover: #1d4ed8;
+  --border-soft: #2a2d33;
+}
+
+/* ===== Layout Principal ===== */
+
+.mis-reservas {
+  min-height: 100vh;
+  padding: 120px 1.5rem 3rem;
+  background: var(--bg-page);
+  color: var(--text-main);
+}
+
+.mis-reservas h1 {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding-left: 0.5rem;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+/* ===== Lista de Reservas ===== */
+
+.mis-reservas__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* ===== Card de cada reserva ===== */
+
+.mis-reservas__item {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  border: 1px solid var(--border-soft);
+  transition: all 0.25s ease;
+}
+
+.mis-reservas__item:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 38px rgba(0,0,0,0.55);
+}
+
+/* Título del hotel */
+.mis-reservas__item h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+/* Texto general */
+.mis-reservas__item p {
+  font-size: 1rem;
+  margin: 0.35rem 0;
+  color: var(--text-muted);
+}
+
+.mis-reservas__item strong {
+  color: var(--text-main);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 600px) {
+  .mis-reservas h1 {
+    font-size: 1.8rem;
+  }
+
+  .mis-reservas__item {
+    padding: 1.4rem;
+  }
+
+  .mis-reservas__item h2 {
+    font-size: 1.15rem;
+  }
+}
