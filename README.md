@@ -1,45 +1,43 @@
 
+# 🏨 Sistema de Reservas de Hoteles
+
 ## 🏗 Arquitectura del Proyecto
 
-El sistema se divide en tres servicios principales, cada uno con su propia responsabilidad y base de datos:
+El sistema está compuesto por tres servicios independientes, cada uno con responsabilidades específicas y base de datos dedicada:
 
-| Servicio | Responsabilidad | Base de Datos |
-| :--- | :--- | :--- |
-| **User API** | Gestión de usuarios y autenticación. | MySQL (`mysql_users`) |
-| **Hotels API** | Catálogo, búsqueda y gestión de información de hoteles. | MongoDB (`mongo_hoteles`) |
-| **Reservation API** | Lógica transaccional de reservas y disponibilidad. | MySQL (`mysql_reservation`) |
-
----
-
-## 🛠 Tecnologías Utilizadas
-
-* **Docker & Docker Compose**: Orquestación de contenedores.
-* **MySQL**: Base de datos relacional para transacciones y usuarios.
-* **MongoDB**: Base de datos NoSQL para el catálogo de hoteles.
-* **[Tu Lenguaje/Framework]**: (Ej: Node.js / Java Spring Boot / Python).
+| Servicio | Responsabilidad | Base de Datos | Tecnología |
+| :--- | :--- | :--- | :--- |
+| **User API** | Gestión de usuarios y autenticación | MySQL (`mysql_users`) | [Tu Lenguaje/Framework] |
+| **Hotels API** | Catálogo, búsqueda y gestión de hoteles | MongoDB (`mongo_hoteles`) | [Tu Lenguaje/Framework] |
+| **Reservation API** | Lógica transaccional de reservas y disponibilidad | MySQL (`mysql_reservation`) | [Tu Lenguaje/Framework] |
 
 ---
+
+## 🛠 Stack Tecnológico
+
+### Infraestructura
+- **Docker & Docker Compose** - Orquestación de contenedores
+- **MySQL** - Base de datos relacional para transacciones y usuarios
+- **MongoDB** - Base de datos NoSQL para el catálogo de hoteles
 
 ## 📋 Pre-requisitos
 
 Antes de comenzar, asegúrate de tener instalado:
-* [Docker Desktop](https://www.docker.com/products/docker-desktop) (o Docker Engine + Compose).
-* Git.
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (o Docker Engine + Docker Compose)
+- Git
 
 ---
 
-## 🚀 Instalación y Puesta en Marcha
+## 🚀 Instalación y Ejecución
 
-Sigue estos pasos para levantar el entorno de desarrollo local.
+Sigue estos pasos para levantar el entorno de desarrollo local:
 
-### 1. Levantar los Contenedores
-Ubícate en la raíz del proyecto y navega a la carpeta del backend para iniciar los servicios.
-
-# Navegar al directorio del backend
-cd ./reserva-hoteles/backend
-
-# Construir y levantar los servicios
+### 1.Configurar el Proyecto
+```bash
+cd reserva-hoteles/backend
 docker compose up --build
+```
 
 ### 2. Verificar el estado y hacer logs
 # User API
