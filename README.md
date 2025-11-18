@@ -5,11 +5,11 @@
 
 El sistema está compuesto por tres servicios independientes, cada uno con responsabilidades específicas y base de datos dedicada:
 
-| Servicio | Responsabilidad | Base de Datos | Tecnología |
-| :--- | :--- | :--- | :--- |
-| **User API** | Gestión de usuarios y autenticación | MySQL (`mysql_users`) | [Tu Lenguaje/Framework] |
-| **Hotels API** | Catálogo, búsqueda y gestión de hoteles | MongoDB (`mongo_hoteles`) | [Tu Lenguaje/Framework] |
-| **Reservation API** | Lógica transaccional de reservas y disponibilidad | MySQL (`mysql_reservation`) | [Tu Lenguaje/Framework] |
+| Servicio | Responsabilidad | Base de Datos |
+| :--- | :--- | :--- |
+| **User API** | Gestión de usuarios y autenticación | MySQL (`mysql_users`) | 
+| **Hotels API** | Catálogo, búsqueda y gestión de hoteles | MongoDB (`mongo_hoteles`) |
+| **Reservation API** | Lógica transaccional de reservas y disponibilidad | MySQL (`mysql_reservation`) |
 
 ---
 
@@ -40,28 +40,28 @@ docker compose up --build
 ```
 
 ### 2. Verificar el estado y hacer logs
-# User API
+#### User API
 docker logs -f user_api
 
-# Reservation API
+#### Reservation API
 docker logs -f reservation_api
 
-# Hotels API
+#### Hotels API
 docker logs -f hotels_api
 
 ### 3. Para poder inspeccionar datos manualmente
 
-## MYSQL
+### MYSQL
 
-# user_api
+#### user_api
 docker exec -it mysql_users sh
-# Luego: mysql -u root -p
+ Luego: mysql -u root -p
 
-# reservation_api 
+ reservation_api 
 
 docker exec -it mysql_reservation sh
-# Luego: mysql -u root -p
+ Luego: mysql -u root -p
 
-## MONGODB
-# Hotels_api
+### MONGODB
+#### Hotels_api
 docker exec -it mongo_hoteles mongosh
