@@ -12,6 +12,7 @@ func mapsUrls() {
 	// Rutas públicas
 	router.POST("/login", authController.Login)
 	router.POST("/users", authController.CrearUsuario)
+	router.GET("/users/:id", authController.GetUserByID)
 
 	
 

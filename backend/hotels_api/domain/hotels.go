@@ -7,8 +7,8 @@ type Hotel struct {
 	Nombre      string             `bson:"nombre"`
 	Imagen		string 			   `bson:"imagen"`
 	Descripcion string 		 	   `bson:"descripcion"`
-	Provincia   string			   `bson:provincia`
-	Direccion   string             `bson:"duracion"`
+	Provincia   string			   `bson:"provincia"`
+	Direccion   string             `bson:"direccion"`
 	Precio      float64            `bson:"precio"`
 }
 

@@ -1,5 +1,5 @@
 // usuarios_services.go
-package services
+package service
 
 import (
 	userRepository "user_api/repository"
