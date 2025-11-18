@@ -40,28 +40,41 @@ docker compose up --build
 ```
 
 ### 2. Verificar el estado y hacer logs
-```bashUser API
+
+#### User API
+```bash
 docker logs -f user_api
 ```
 #### Reservation API
-```bashdocker logs -f reservation_api
+```bash
+docker logs -f reservation_api
 ```
 #### Hotels API
-```bashdocker logs -f hotels_api
+```bash
+docker logs -f hotels_api
 ```
 ### 3. Para poder inspeccionar datos manualmente
 
 ### MYSQL
 
 #### user_api
-```bashdocker exec -it mysql_users sh
- Luego: mysql -u root -p
+```bash
+docker exec -it mysql_users sh
+```
+luego
+```bash
+  mysql -u root -p
+
 ```
 ### reservation_api 
 ```bash
 docker exec -it mysql_reservation sh
- Luego: mysql -u root -p
 ```
+ Luego: 
+```bash
+ mysql -u root -p
+ ```
+
 ### MONGODB
 #### Hotels_api
 ```bash
