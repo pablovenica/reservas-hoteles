@@ -1,0 +1,99 @@
+{
+  "info": {
+    "name": "Search API",
+    "description": "Collection para probar Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Realizar Búsqueda",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"hotel_name\": \"Hotel Paradise\",\n  \"city\": \"Madrid\",\n  \"check_in\": \"2024-12-01\",\n  \"check_out\": \"2024-12-05\",\n  \"guests\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/search/hotels",
+          "host": ["{{base_url}}"],
+          "path": ["search", "hotels"]
+        }
+      }
+    },
+    {
+      "name": "Obtener Historial",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/search/history",
+          "host": ["{{base_url}}"],
+          "path": ["search", "history"]
+        }
+      }
+    },
+    {
+      "name": "Obtener Búsqueda por ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/search/history/{{search_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["search", "history", "{{search_id}}"]
+        }
+      }
+    },
+    {
+      "name": "Eliminar Búsqueda",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/search/history/{{search_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["search", "history", "{{search_id}}"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8084"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    },
+    {
+      "key": "search_id",
+      "value": ""
+    }
+  ]
+}
