@@ -1,0 +1,36 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home } from "./pages/Home";
+import { Usuario } from "./pages/Usuario";
+import { Reservas } from "./pages/Reservas";
+import { Admin } from "./pages/Admin";
+import { Login } from "./pages/Login";
+import { Registro } from "./pages/Registro";
+
+import DetalleHotel from "./pages/DetalleHotel";
+import MisReservas from "./pages/MisReservas";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="/usuario" element={<Usuario />} />
+        <Route path="/usuario/reservas" element={<Reservas />} />
+        <Route path="/usuario/hotel/:id" element={<DetalleHotel />} />
+        <Route path="/usuario/misreservas" element={<MisReservas />} />
+
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
+
+        <Route
+          path="*"
+          element={<h1 style={{ textAlign: "center" }}>Página no encontrada</h1>}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;

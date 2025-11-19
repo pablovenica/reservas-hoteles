@@ -1,0 +1,208 @@
+/* ======================================
+   TEMA OSCURO — Detalle del Hotel
+   ====================================== */
+
+:root {
+  --bg-page: #0d0d0f;           /* Fondo oscuro principal */
+  --bg-card: #1a1c20;           /* Card oscuro elegante */
+  --bg-card-hover: #1f2126;
+  --text-main: #ffffff;         /* Texto blanco */
+  --text-muted: #c8c8c8;        /* Gris claro */
+  --accent: #2563eb;            /* Azul elegante para boton */
+  --accent-hover: #1d4ed8;
+  --border-soft: #2a2d33;
+}
+
+/* ===== Layout general ===== */
+
+.detalle-hotel {
+  min-height: 100vh;
+  padding: 110px 1.5rem 2.5rem;
+  background: var(--bg-page);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.detalle-hotel__container {
+  width: 100%;
+  max-width: 1150px;
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+  gap: 2.5rem;
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--border-soft);
+  transition: background 0.3s ease;
+}
+
+.detalle-hotel__container:hover {
+  background: var(--bg-card-hover);
+}
+
+/* ===== Columna imagen ===== */
+
+.detalle-hotel__imagen {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #2e2f33;
+}
+
+.detalle-hotel__imagen img {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.02);
+  transition: transform 0.4s ease;
+}
+
+.detalle-hotel__imagen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.45)
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.detalle-hotel__container:hover .detalle-hotel__imagen img {
+  transform: scale(1.06);
+}
+
+.detalle-hotel__container:hover .detalle-hotel__imagen::after {
+  opacity: 1;
+}
+
+/* ===== Info del hotel ===== */
+
+.detalle-hotel__info {
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* Remove blue backgrounds */
+.detalle-hotel__info * {
+  background: transparent !important;
+  color: var(--text-main);
+}
+
+.detalle-hotel__info h1 {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.detalle-hotel__ubicacion {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.detalle-hotel__precio {
+  margin-top: 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.detalle-hotel__precio span {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.detalle-hotel__descripcion {
+  margin: 0.4rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.detalle-hotel__descripcion strong {
+  color: #fff;
+}
+
+/* Extras */
+.detalle-hotel__extras {
+  margin-top: 0.4rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #131416;
+  border: 1px solid #2b2d31;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.detalle-hotel__extras li {
+  color: var(--text-muted);
+}
+
+.detalle-hotel__extras li span {
+  font-weight: 600;
+  color: white;
+}
+
+/* ===== Botón Reservar ===== */
+
+.detalle-hotel__btn {
+  margin-top: 1.6rem;
+  align-self: flex-start;
+  padding: 0.85rem 2.8rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
+  transition: all 0.25s ease;
+}
+
+.detalle-hotel__btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.45);
+}
+
+.detalle-hotel__btn:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+/* ===== Responsivo ===== */
+
+@media (max-width: 900px) {
+  .detalle-hotel__container {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+    gap: 1.6rem;
+  }
+
+  .detalle-hotel__info h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .detalle-hotel__container {
+    border-radius: 18px;
+    padding: 1.5rem;
+  }
+
+  .detalle-hotel__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
