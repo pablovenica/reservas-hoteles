@@ -73,9 +73,10 @@ docker logs -f hotels_api
 ### 3. Ejecutar la Aplicación Frontend 💻
 
 ``` bash
-cd ../frontend
+cd frontend
 npm install
 npm install react-router-dom
+npm install sweetalert2
 npm run dev
 ```
 
