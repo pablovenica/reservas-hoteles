@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"search_api/service"
 )
@@ -14,24 +15,34 @@ func StartConsumer() {
 	msgs, _ := Ch.Consume(
 		os.Getenv("HOTEL_QUEUE"),
 		"",
-		true, false, false, false, nil,
+		true,  // auto-ack
+		false,
+		false,
+		false,
+		nil,
 	)
 
 	for m := range msgs {
+
 		var evt HotelEvent
 		json.Unmarshal(m.Body, &evt)
 
-		rk := m.RoutingKey
+		log.Printf("Received event %s for hotel %s\n", m.RoutingKey, evt.HotelID)
 
-		switch rk {
+		switch m.RoutingKey {
+
 		case "hotel.created":
+			// fetch → index → invalidate
 			service.IndexHotel(evt.HotelID)
+			service.InvalidateSearchCache()
 
 		case "hotel.updated":
 			service.UpdateHotel(evt.HotelID)
+			service.InvalidateSearchCache()
 
 		case "hotel.deleted":
 			service.DeleteHotel(evt.HotelID)
+			service.InvalidateSearchCache()
 		}
 	}
 }

@@ -31,9 +31,20 @@ func Init() {
 // ----------------------------------------------------------------------
 // GENERACIÓN DE KEYS
 // ----------------------------------------------------------------------
+var versionKeys = make(map[string]int)
+
+func getPrefixVersion(prefix string) int {
+    if v, ok := versionKeys[prefix]; ok {
+        return v
+    }
+    versionKeys[prefix] = 1
+    return 1
+}
 
 func MakeSearchKey(query string, page, size int) string {
-    return fmt.Sprintf("search:%s:p%d:s%d", query, page, size)
+    prefix := "search"
+    version := getPrefixVersion(prefix)
+    return fmt.Sprintf("%s:v%d:%s:p%d:s%d", prefix, version, query, page, size)
 }
 
 // ----------------------------------------------------------------------
@@ -87,12 +98,24 @@ func Set[T any](key string, value T) error {
     })
 }
 
+func ClearPrefix(prefix string) {
+
+    // 1) Subir la versión → invalida Memcached automáticamente
+    versionKeys[prefix]++
+
+    // 2) Borrar CCache completo del prefijo
+    items := localCache.Items()
+    for _, item := range items {
+        if len(item.Key()) >= len(prefix) && item.Key()[:len(prefix)] == prefix {
+            localCache.Delete(item.Key())
+        }
+    }
+}
+
 // ----------------------------------------------------------------------
-// INVALIDATE – borra cache local (simple)
+// INVALIDATE – borra cache del prefijo "search"
 // ----------------------------------------------------------------------
 
 func InvalidateSearchCache() {
-    localCache.Clear()
-    // Memcached NO se borra completa porque puede contener otras keys.
-    // Si querés borrar todo, pedirlo explícitamente.
+    ClearPrefix("search")
 }
