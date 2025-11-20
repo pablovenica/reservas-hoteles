@@ -19,17 +19,14 @@ var (
 // ----------------------------------------------------------------------
 
 func Init() {
-    // Cache local (in-memory, súper rápida)
     localCache = ccache.New(ccache.Configure().
         MaxSize(5000).
         ItemsToPrune(100))
-
-    // Cache distribuida (Memcached)
-    memcached = memcache.New("memcached:11211") // Cambiar si tu host es diferente
+    memcached = memcache.New("memcached:11211")
 }
 
 // ----------------------------------------------------------------------
-// GENERACIÓN DE KEYS
+// KEYS
 // ----------------------------------------------------------------------
 var versionKeys = make(map[string]int)
 
@@ -48,14 +45,15 @@ func MakeSearchKey(query string, page, size int) string {
 }
 
 // ----------------------------------------------------------------------
-// GET – lee desde CCache y Memcached
+// GET – CCache → Memcached → Solr
 // ----------------------------------------------------------------------
-
 func Get[T any](key string) (*T, bool) {
+    start := time.Now()
 
     // 1) Buscar en CCache
     if item := localCache.Get(key); item != nil && !item.Expired() {
         if value, ok := item.Value().(*T); ok {
+            fmt.Printf("[CACHE HIT] CCache key=%s tiempo=%s\n", key, time.Since(start))
             return value, true
         }
     }
@@ -65,22 +63,21 @@ func Get[T any](key string) (*T, bool) {
     if err == nil && data != nil {
         var value T
         if err := json.Unmarshal(data.Value, &value); err == nil {
-
-            // Hidratar CCache
             localCache.Set(key, &value, 5*time.Minute)
-
+            fmt.Printf("[CACHE HIT] Memcached key=%s tiempo=%s\n", key, time.Since(start))
             return &value, true
         }
     }
 
+    fmt.Printf("[CACHE MISS] key=%s tiempo=%s\n", key, time.Since(start))
     return nil, false
 }
 
 // ----------------------------------------------------------------------
-// SET – guarda en CCache y Memcached
+// SET
 // ----------------------------------------------------------------------
-
 func Set[T any](key string, value T) error {
+    start := time.Now()
 
     // 1) Guardar en CCache
     localCache.Set(key, &value, 5*time.Minute)
@@ -91,19 +88,21 @@ func Set[T any](key string, value T) error {
         return err
     }
 
-    return memcached.Set(&memcache.Item{
+    err = memcached.Set(&memcache.Item{
         Key:        key,
         Value:      jsonBytes,
         Expiration: int32(10 * 60),
     })
+
+    fmt.Printf("[CACHE SET] key=%s tiempo=%s\n", key, time.Since(start))
+    return err
 }
 
+// ----------------------------------------------------------------------
+// CLEAR
+// ----------------------------------------------------------------------
 func ClearPrefix(prefix string) {
-
-    // 1) Subir la versión → invalida Memcached automáticamente
     versionKeys[prefix]++
-
-    // 2) Borrar CCache completo del prefijo
     items := localCache.Items()
     for _, item := range items {
         if len(item.Key()) >= len(prefix) && item.Key()[:len(prefix)] == prefix {
@@ -111,10 +110,6 @@ func ClearPrefix(prefix string) {
         }
     }
 }
-
-// ----------------------------------------------------------------------
-// INVALIDATE – borra cache del prefijo "search"
-// ----------------------------------------------------------------------
 
 func InvalidateSearchCache() {
     ClearPrefix("search")

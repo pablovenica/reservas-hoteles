@@ -14,26 +14,32 @@ type SearchResult struct {
     Total int            `json:"total"`
     Items []domain.Hotel `json:"items"`
 }
-
 func Search(q string, page, size int) (int, []domain.Hotel, error) {
+    start := time.Now()
     key := cache.MakeSearchKey(q, page, size)
 
+    // Revisar cache
     if cached, ok := cache.Get[SearchResult](key); ok {
+        fmt.Printf("[SEARCH] key=%s tomada desde cache tiempo total=%s\n", key, time.Since(start))
         return cached.Total, cached.Items, nil
     }
 
+    // Cache miss → llamar al repositorio (Solr)
     total, items, err := repository.SearchHotels(q, page, size)
     if err != nil {
         return 0, nil, err
     }
 
+    // Guardar en cache
     cache.Set(key, SearchResult{
         Total: total,
         Items: items,
     })
 
+    fmt.Printf("[SEARCH] key=%s tomada desde Solr tiempo total=%s\n", key, time.Since(start))
     return total, items, nil
 }
+
 
 func getHotelFromMainAPI(id string) (*domain.Hotel, error) {
     url := fmt.Sprintf("%s/hotels/%s", config.MainAPIURL, id)
