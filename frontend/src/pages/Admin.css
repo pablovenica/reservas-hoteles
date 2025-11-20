@@ -1,0 +1,180 @@
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0f1115;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #15171c;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+
+.sidebar-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #00bcd4;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar-nav li a {
+  text-decoration: none;
+  color: #ccc;
+  font-size: 1rem;
+  display: block;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav li a:hover {
+  background: #00bcd4;
+  color: #111;
+  transform: translateX(4px);
+}
+
+.admin-content {
+  margin-left: 250px;
+  padding: 3rem 4rem;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.admin-content h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.admin-content p {
+  color: #bcbcbc;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.admin-panel {
+  background: #1a1c22;
+  padding: 2rem 2.2rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.05);
+  width: 100%;
+}
+
+.btn-agregar {
+  background: #00bcd4;
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1.6rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-bottom: 1.8rem;
+}
+
+.btn-agregar:hover {
+  background: #00a5be;
+  transform: translateY(-2px);
+}
+
+.tabla-cursos {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ddd;
+}
+
+.tabla-cursos th,
+.tabla-cursos td {
+  padding: 1rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tabla-cursos th {
+  color: #00bcd4;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.tabla-cursos tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-editar,
+.btn-eliminar {
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.btn-editar {
+  background: #00bcd4;
+  color: #fff;
+}
+
+.btn-editar:hover {
+  background: #0099b3;
+  transform: scale(1.05);
+}
+
+.btn-eliminar {
+  background: #ff4c4c;
+  color: #fff;
+}
+
+.btn-eliminar:hover {
+  background: #e33b3b;
+  transform: scale(1.05);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .admin-content {
+    margin-left: 0;
+    padding: 2rem;
+    width: 100%;
+  }
+
+  .admin-panel {
+    padding: 1.5rem;
+  }
+}
