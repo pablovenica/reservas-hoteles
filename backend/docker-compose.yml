@@ -1,0 +1,142 @@
+services:
+  mysql_users:
+    image: mysql:8.0
+    container_name: mysql_users
+    environment:
+      MYSQL_ROOT_PASSWORD: kaneki15..
+      MYSQL_DATABASE: users_db
+    volumes:
+      - mysql_users_data:/var/lib/mysql
+    networks:
+      - backend-net
+
+  mysql_reservation:
+    image: mysql:8.0
+    container_name: mysql_reservation
+    environment:
+      MYSQL_ROOT_PASSWORD: kaneki15..
+      MYSQL_DATABASE: reservation_db
+    volumes:
+      - mysql_reservation_data:/var/lib/mysql
+    networks:
+      - backend-net
+
+  mongo_hoteles:
+    image: mongo:7.0
+    container_name: mongo_hoteles
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend-net
+
+  mongo_express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo_hoteles
+    networks:
+      - backend-net
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"    
+      - "15672:15672"   
+    networks:
+      - backend-net
+
+  memcached:
+    image: memcached:1.6
+    container_name: memcached
+    restart: always
+    ports:
+      - "11211:11211"
+    networks:
+      - backend-net
+
+  user_api:
+    build:
+      context: ./user_api
+    container_name: user_api
+    restart: always
+    depends_on:
+      - mysql_users
+    env_file:
+      - ./user_api/.env
+    ports:
+      - "8080:8080"
+    networks:
+      - backend-net
+
+  hotels_api:
+    build:
+      context: ./hotels_api
+    container_name: hotels_api
+    restart: always
+    env_file:
+      - ./hotels_api/.env
+    depends_on:
+      - mongo_hoteles
+      - rabbitmq
+    ports:
+      - "8082:8082"
+    networks:
+      - backend-net
+
+  reservations_api:
+    build:
+      context: ./reservation_api
+    container_name: reservations_api
+    restart: always
+    env_file:
+      - ./reservation_api/.env
+    depends_on:
+      - mysql_reservation
+      - user_api
+      - hotels_api
+    ports:
+      - "8083:8083"
+    networks:
+      - backend-net
+
+  solr_hoteles:
+    image: solr:8
+    container_name: solr_hoteles
+    restart: always
+    command:
+      - solr-precreate
+      - hotels_core
+    ports:
+      - "8983:8983"
+    networks:
+      - backend-net
+
+  search_api:
+    build:
+      context: ./search_api
+    container_name: search_api
+    restart: always
+    depends_on:
+      - solr_hoteles
+      - rabbitmq
+      - hotels_api
+      - memcached
+    env_file:
+      - ./search_api/.env
+    ports:
+      - "8084:8084"
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+
+volumes:
+  mongo_data:
+  mysql_users_data:
+  mysql_reservation_data:
