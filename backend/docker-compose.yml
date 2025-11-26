@@ -9,6 +9,8 @@ services:
       - mysql_users_data:/var/lib/mysql
     networks:
       - backend-net
+    ports:
+      - "3307:3306" 
 
   mysql_reservation:
     image: mysql:8.0
