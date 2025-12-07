@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { NavbarUsuario } from "../components/NavbarUsuario";
-import { CursoCard } from "../components/CursoCard";
+import { HotelCard } from "../components/HotelCard";
 import "./Reservas.css";
 
 const SEARCH_API_BASE = "http://localhost:8084";
@@ -175,15 +175,16 @@ export function Reservas() {
               </p>
             ) : (
               filteredHoteles.map((hotel) => (
-                <CursoCard
-                  key={hotel.id}
-                  id={hotel.id}
-                  titulo={hotel.nombre}
-                  nivel={hotel.provincia}
-                  duracion={hotel.direccion}
-                  docente={hotel.descripcion}
-                  precio={`$ ${hotel.precio}`}
-                />
+                <HotelCard
+  key={hotel.id}
+  id={hotel.id}
+  nombre={hotel.nombre}
+  imagen={hotel.imagen}       // si tu backend lo envía
+  provincia={hotel.provincia}
+  descripcion={hotel.descripcion}
+  direccion={hotel.direccion}
+  precio={hotel.precio}
+/>
               ))
             )}
           </div>

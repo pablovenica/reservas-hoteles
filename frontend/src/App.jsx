@@ -3,7 +3,7 @@ import { Home } from "./pages/Home";
 import { Usuario } from "./pages/Usuario";
 import { Reservas } from "./pages/Reservas";
 import { Admin } from "./pages/Admin";
-import { Login } from "./pages/Login";
+import  {Login}  from "./pages/Login";
 import { Registro } from "./pages/Registro";
 
 import DetalleHotel from "./pages/DetalleHotel";
@@ -13,9 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-
-        <Route path="/usuario" element={<Usuario />} />
+        <Route path="/" element={<Usuario />} />
         <Route path="/usuario/reservas" element={<Reservas />} />
         <Route path="/usuario/hotel/:id" element={<DetalleHotel />} />
         <Route path="/usuario/misreservas" element={<MisReservas />} />

@@ -33,14 +33,14 @@ export function NavbarUsuario() {
   return (
     <nav className="navbar-usuario">
       <div className="navbar-logo">
-        <Link to="/usuario">
+        <Link to="/">
           <img src={logo} alt="Logo Hotel VEYOR" />
         </Link>
       </div>
 
       <ul className="nav-links">
         <li>
-          <Link to="/usuario">Inicio</Link>
+          <Link to="/">Inicio</Link>
         </li>
         <li>
           <Link to="/usuario/reservas">Reservas</Link>

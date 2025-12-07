@@ -53,7 +53,7 @@ export function Login() {
       if (data.rol === "admin") {
         navigate("/admin");
       } else {
-        navigate("/usuario");
+        navigate("/");
       }
     } catch (error) {
       console.error("Error:", error);
