@@ -8,7 +8,7 @@ const SEARCH_API_BASE = "http://localhost:8084";
 
 export function Reservas() {
   const [hoteles, setHoteles] = useState([]);
-  const [filteredHoteles, setFilteredHoteles] = useState([]);
+  const [filteredHoteles, setFilteredHoteles] = useState([]);1
 
   const [ubicacion, setUbicacion] = useState("");
   const [fechaEntrada, setFechaEntrada] = useState("");
